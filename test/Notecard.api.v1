@@ -1,0 +1,41 @@
+#ifndef NOTECARD_API_V1
+#define NOTECARD_API_V1
+
+#include <stdint.h>
+
+typedef bool Jbool;
+typedef float JNUMBER;
+
+class HardwareSerial;
+class J;
+class Stream;
+class TwoWire;
+
+struct Notecard
+{
+    virtual void begin(uint32_t, uint32_t, TwoWire &) = 0;
+    virtual void begin(HardwareSerial &, int) = 0;
+    virtual void setDebugOutputStream(Stream &) = 0;
+    virtual void clearDebugOutputStream(void) = 0;
+    virtual void i2cTest(int) = 0;
+    virtual J *  newRequest(const char *) = 0;
+    virtual bool sendRequest(J *) = 0;
+    virtual J *  requestAndResponse(J *) = 0;
+    virtual void deleteResponse(J *) = 0;
+    virtual void logDebug(const char *) = 0;
+    virtual void logDebugf(const char *, ...) = 0;
+    virtual bool debugSyncStatus(int, int) = 0;
+    virtual bool responseError(J *) = 0;
+};
+
+J * JGetObjectItem(const J * const, const char * const);
+Jbool JHasObjectItem(const J *, const char *);
+Jbool JIsNumber(const J * const);
+JNUMBER JNumberValue(J *);
+
+extern J * JGetObjectItemResult;
+extern Jbool JHasObjectItemResult;
+extern Jbool JIsNumberResult;
+extern JNUMBER JNumberValueResult;
+
+#endif // NOTECARD_V1

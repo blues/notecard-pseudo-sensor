@@ -1,0 +1,6 @@
+.vscode/
+
+a.out
+pseudo_sensor_tests
+
+*.gc*
