@@ -3,11 +3,60 @@
 #include <catch2/catch.hpp>
 #include <fakeit.hpp>
 
-// Compile Command: g++ ../src/NotecardPseudoSensor.cpp NotecardPseudoSensor.test.cpp cjson.mock.cpp -Wall -Wextra -Wpedantic -I . -I ../src/ -I Catch2/single_include/ -I FakeIt/single_header/catch/ -DMOCK && ./a.out || echo "Tests Result: $?"
+// Compile Command: g++ ../src/NotecardPseudoSensor.cpp NotecardPseudoSensor.test.cpp mock/cjson.mock.cpp mock/stdlib.mock.cpp -Wall -Wextra -Wpedantic -I . -I ../src/ -I Catch2/single_include/ -I FakeIt/single_header/catch/ -DMOCK && ./a.out || echo "Tests Result: $?"
 
 #include "NotecardPseudoSensor.h"
-#include "Notecard.api.v1"
+#include "mock/Notecard.api.v1"
+#include "mock/stdlib.mock.hpp"
 
+TEST_CASE("NotecardPseudoSensor::humidity() returns a base value of 45.0f", "[humidity]") {
+    // Arrange
+    rand_Parameters.reset();
+    rand_Parameters.result = 0;
+    fakeit::Mock<Notecard> mock_notecard;
+    blues::NotecardPseudoSensor ps(mock_notecard.get());
+    mock_notecard.ClearInvocationHistory();
+
+    // Act
+    const float result = ps.humidity();
+
+    // Assert
+    CHECK(result == 45.0f);
+}
+
+TEST_CASE("NotecardPseudoSensor::humidity() returns a max value of 49.9999f", "[humidity]") {
+    // Arrange
+    rand_Parameters.reset();
+    rand_Parameters.result = RAND_MAX;
+    fakeit::Mock<Notecard> mock_notecard;
+    blues::NotecardPseudoSensor ps(mock_notecard.get());
+    mock_notecard.ClearInvocationHistory();
+
+    // Act
+    const float result = ps.humidity();
+
+    // Assert
+    CHECK(result < 50.0f);
+}
+
+TEST_CASE("NotecardPseudoSensor::humidity() returns a value rounded to 4 decimal places", "[humidity]") {
+    // Arrange
+    fakeit::Mock<Notecard> mock_notecard;
+    blues::NotecardPseudoSensor ps(mock_notecard.get());
+    mock_notecard.ClearInvocationHistory();
+
+    // Act
+    const float result = ps.humidity();
+
+    // Assert
+    /*
+     * Remove whole and decimal values to 4 places from
+     * zero, then compare the resulting value to zero.
+     */
+    CHECK(0.0f == (static_cast<float>(result * 10000) - static_cast<int>(result * 10000)));
+}
+
+// plus a random number modulo 50000 divided by 10000", "[humidity]") {
 TEST_CASE("NotecardPseudoSensor::temp() generates a `card.temp` request", "[temp]") {
     // Arrange
     JGetObjectItemResult = reinterpret_cast<J *>(0x19790917);
