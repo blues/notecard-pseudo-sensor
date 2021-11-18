@@ -23,6 +23,12 @@ class NotecardPseudoSensor {
     NotecardPseudoSensor(Notecard & notecard);
 
     /*!
+     * \brief Generate humidity in %RH
+     * \returns Percentage of relative humidity
+     */
+    float humidity (void);
+
+    /*!
      * \brief Acquire temperature in centigrade
      * \returns The current temperature
      */

@@ -3,7 +3,8 @@
 g++ -fprofile-arcs -ftest-coverage -Wall -Wextra -Wpedantic -O0 -g \
   ../src/NotecardPseudoSensor.cpp \
   NotecardPseudoSensor.test.cpp \
-  cjson.mock.cpp \
+  mock/cjson.mock.cpp \
+  mock/stdlib.mock.cpp \
 -I . \
 -I ../src/ \
 -I Catch2/single_include/ \
